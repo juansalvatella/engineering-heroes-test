@@ -88,11 +88,92 @@ for (const [id, hero] of Object.entries(heroes)) {
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, W, H);
 
-  // icon
-  ctx.font = "160px serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(hero.icon, 220, H / 2 - 10);
+  // icon — drawn shapes instead of emoji (emoji doesn't render in @napi-rs/canvas)
+  const ix = 220;
+  const iy = H / 2 - 10;
+  ctx.strokeStyle = hero.color;
+  ctx.fillStyle = hero.color;
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  if (id === "aquaman") {
+    // trident
+    ctx.beginPath();
+    ctx.moveTo(ix, iy + 70); ctx.lineTo(ix, iy - 50);
+    ctx.moveTo(ix - 35, iy - 30); ctx.lineTo(ix - 35, iy - 55);
+    ctx.quadraticCurveTo(ix - 35, iy - 70, ix, iy - 50);
+    ctx.quadraticCurveTo(ix + 35, iy - 70, ix + 35, iy - 55);
+    ctx.lineTo(ix + 35, iy - 30);
+    ctx.moveTo(ix - 35, iy - 25); ctx.lineTo(ix + 35, iy - 25);
+    ctx.stroke();
+  } else if (id === "flash") {
+    // lightning bolt
+    ctx.beginPath();
+    ctx.moveTo(ix + 10, iy - 65);
+    ctx.lineTo(ix - 20, iy + 5);
+    ctx.lineTo(ix + 2, iy + 5);
+    ctx.lineTo(ix - 10, iy + 65);
+    ctx.lineTo(ix + 25, iy - 10);
+    ctx.lineTo(ix + 3, iy - 10);
+    ctx.closePath();
+    ctx.fill();
+  } else if (id === "priest") {
+    // scroll / codex
+    const sw = 50, sh = 70;
+    ctx.beginPath();
+    ctx.roundRect(ix - sw/2, iy - sh/2, sw, sh, 6);
+    ctx.stroke();
+    ctx.lineWidth = 2.5;
+    for (let l = 0; l < 4; l++) {
+      const ly = iy - sh/2 + 16 + l * 14;
+      ctx.beginPath();
+      ctx.moveTo(ix - sw/2 + 12, ly);
+      ctx.lineTo(ix + sw/2 - 12, ly);
+      ctx.stroke();
+    }
+    ctx.lineWidth = 4;
+  } else if (id === "spielberg") {
+    // film clapperboard
+    const bw = 60, bh = 50;
+    ctx.beginPath();
+    ctx.roundRect(ix - bw/2, iy - 10, bw, bh, 6);
+    ctx.stroke();
+    // clapper top
+    ctx.beginPath();
+    ctx.moveTo(ix - bw/2, iy - 10);
+    ctx.lineTo(ix - bw/2 - 5, iy - 30);
+    ctx.lineTo(ix + bw/2 + 5, iy - 30);
+    ctx.lineTo(ix + bw/2, iy - 10);
+    ctx.closePath();
+    ctx.stroke();
+    // stripes on clapper
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(ix - 15, iy - 10); ctx.lineTo(ix - 20, iy - 30);
+    ctx.moveTo(ix + 5, iy - 10); ctx.lineTo(ix, iy - 30);
+    ctx.moveTo(ix + 25, iy - 10); ctx.lineTo(ix + 20, iy - 30);
+    ctx.stroke();
+    ctx.lineWidth = 4;
+  } else if (id === "paladin") {
+    // shield
+    ctx.beginPath();
+    ctx.moveTo(ix, iy - 60);
+    ctx.lineTo(ix + 45, iy - 40);
+    ctx.lineTo(ix + 45, iy + 10);
+    ctx.quadraticCurveTo(ix + 40, iy + 55, ix, iy + 70);
+    ctx.quadraticCurveTo(ix - 40, iy + 55, ix - 45, iy + 10);
+    ctx.lineTo(ix - 45, iy - 40);
+    ctx.closePath();
+    ctx.stroke();
+    // cross on shield
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(ix, iy - 35); ctx.lineTo(ix, iy + 40);
+    ctx.moveTo(ix - 28, iy - 5); ctx.lineTo(ix + 28, iy - 5);
+    ctx.stroke();
+    ctx.lineWidth = 4;
+  }
 
   // right side
   const rx = 460;
