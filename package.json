@@ -1,0 +1,19 @@
+{
+  "name": "engineering-heroes-test",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Discover your engineering superhero archetype — based on the First Round Review article by Patrick Shields",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "generate-cards": "node scripts/generate-cards.mjs",
+    "build": "node scripts/generate-cards.mjs && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.7.10"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "^1.0.0"
+  }
+}

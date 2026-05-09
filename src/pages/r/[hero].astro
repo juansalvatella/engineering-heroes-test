@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths } from "astro";
+
+const heroData: Record<string, { name: string; icon: string; tagline: string; color: string }> = {
+  aquaman: { name: "The Aquaman", icon: "\u{1F531}", tagline: "The Deep Diver", color: "#00b4d8" },
+  flash: { name: "The Flash", icon: "\u26A1", tagline: "The Rapid Prototyper", color: "#ef233c" },
+  priest: { name: "The Priest", icon: "\u{1F4DC}", tagline: "The Code Purist", color: "#9b5de5" },
+  spielberg: { name: "The Spielberg", icon: "\u{1F3AC}", tagline: "The UX Visionary", color: "#f4a261" },
+  paladin: { name: "The Paladin", icon: "\u{1F6E1}\uFE0F", tagline: "The Team Multiplier", color: "#f5c542" },
+};
+
+export function getStaticPaths() {
+  return ["aquaman", "flash", "priest", "spielberg", "paladin"].map((hero) => ({
+    params: { hero },
+  }));
+}
+
+const { hero } = Astro.params;
+const h = heroData[hero!];
+const origin = Astro.site?.origin ?? Astro.url.origin;
+const ogImage = `${origin}/cards/${hero}.png`;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{h.icon} I'm {h.name} — What Engineering Superhero Are You?</title>
+    <meta name="description" content={`${h.icon} I'm ${h.name} — ${h.tagline}. Discover your engineering superhero archetype.`} />
+    <meta property="og:title" content={`${h.icon} I'm ${h.name} — ${h.tagline}`} />
+    <meta property="og:description" content="Discover your engineering superhero archetype. 12 questions, 5 archetypes, no wrong answers." />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${h.icon} I'm ${h.name} — ${h.tagline}`} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta http-equiv="refresh" content={`0;url=/?h=${hero}`} />
+  </head>
+  <body>
+    <p>Redirecting&hellip;</p>
+  </body>
+</html>
