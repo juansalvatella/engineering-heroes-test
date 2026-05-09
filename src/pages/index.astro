@@ -1273,12 +1273,10 @@ const description = "Discover your engineering superhero archetype. Based on the
 
   shareLinkedin.addEventListener("click", () => {
     const ogUrl = getOgShareUrl();
-    const winner = getWinnerInfo();
-    const text = `${winner.icon} I\u2019m ${winner.name} \u2014 ${winner.tagline}!\n\nWhat engineering superhero are you? Take the quiz and find out:\n${ogUrl}`;
     window.open(
-      `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`,
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(ogUrl)}`,
       "_blank",
-      "width=600,height=700"
+      "width=600,height=600"
     );
   });
 
