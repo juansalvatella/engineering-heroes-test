@@ -1,46 +1,137 @@
 ---
-import type { GetStaticPaths } from "astro";
-
-const heroData: Record<string, { name: string; icon: string; tagline: string; color: string }> = {
-  aquaman: { name: "The Aquaman", icon: "\u{1F531}", tagline: "The Deep Diver", color: "#00b4d8" },
-  flash: { name: "The Flash", icon: "\u26A1", tagline: "The Rapid Prototyper", color: "#ef233c" },
-  priest: { name: "The Priest", icon: "\u{1F4DC}", tagline: "The Code Purist", color: "#9b5de5" },
-  spielberg: { name: "The Spielberg", icon: "\u{1F3AC}", tagline: "The UX Visionary", color: "#f4a261" },
-  paladin: { name: "The Paladin", icon: "\u{1F6E1}\uFE0F", tagline: "The Team Multiplier", color: "#f5c542" },
-};
-
 export function getStaticPaths() {
   return ["aquaman", "flash", "priest", "spielberg", "paladin"].map((hero) => ({
     params: { hero },
   }));
 }
 
+const heroData: Record<string, { name: string; icon: string; tagline: string; color: string; quote: string }> = {
+  aquaman: { name: "The Aquaman", icon: "\u{1F531}", tagline: "The Deep Diver", color: "#00b4d8", quote: "They\u2019re about how it works in a very deep way." },
+  flash: { name: "The Flash", icon: "\u26A1", tagline: "The Rapid Prototyper", color: "#ef233c", quote: "The Flash is interested in what\u2019s fast." },
+  priest: { name: "The Priest", icon: "\u{1F4DC}", tagline: "The Code Purist", color: "#9b5de5", quote: "The Priest is really in love with the act of programming to a higher degree." },
+  spielberg: { name: "The Spielberg", icon: "\u{1F3AC}", tagline: "The UX Visionary", color: "#f4a261", quote: "It\u2019s a suggestive robin blue button with a lock." },
+  paladin: { name: "The Paladin", icon: "\u{1F6E1}\uFE0F", tagline: "The Team Multiplier", color: "#f5c542", quote: "The ability to heal any injuries from the interface between business and software is the job." },
+};
+
 const { hero } = Astro.params;
 const h = heroData[hero!];
 const base = import.meta.env.BASE_URL;
 const origin = Astro.site?.origin ?? Astro.url.origin;
 const ogImage = `${origin}${base}/cards/${hero}.png`;
+const quizUrl = `${base}/?h=${hero}`;
+const ogTitle = `${h.icon} I\u2019m ${h.name} \u2014 ${h.tagline}!`;
+const ogDescription = `\u201C${h.quote}\u201D \u2014 What engineering superhero are you? Take the quiz to discover your archetype. 12 questions, 5 archetypes, no wrong answers.`;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{h.icon} I'm {h.name} — What Engineering Superhero Are You?</title>
-    <meta name="description" content={`${h.icon} I'm ${h.name} — ${h.tagline}. Discover your engineering superhero archetype.`} />
-    <meta property="og:title" content={`${h.icon} I'm ${h.name} — ${h.tagline}!`} />
-    <meta property="og:description" content="What engineering superhero are you? Take the quiz — 12 questions, 5 archetypes, no wrong answers." />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <title>{ogTitle}</title>
+    <meta name="description" content={ogDescription} />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={`${h.icon} I'm ${h.name} — ${h.tagline}`} />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={ogDescription} />
     <meta name="twitter:image" content={ogImage} />
-    <meta http-equiv="refresh" content={`0;url=${base}/?h=${hero}`} />
   </head>
   <body>
-    <p>Redirecting&hellip;</p>
+    <main>
+      <div class="card">
+        <div class="hero-header">
+          <span class="icon">{h.icon}</span>
+          <div>
+            <h1 style={`color:${h.color}`}>{h.name}</h1>
+            <p class="tagline">{h.tagline}</p>
+          </div>
+        </div>
+        <blockquote>&ldquo;{h.quote}&rdquo;</blockquote>
+        <a href={quizUrl} class="cta">Discover Your Archetype</a>
+      </div>
+      <p class="credit">
+        Based on the framework by <strong>Patrick Shields</strong> &mdash;
+        <a href="https://review.firstround.com/how-to-spot-and-magnify-the-powers-of-your-engineering-superheroes/" target="_blank" rel="noopener noreferrer">First Round Review</a>
+      </p>
+    </main>
   </body>
 </html>
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #060918;
+    color: #e2e6f0;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 520px; width: 100%; text-align: center; }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid #1e2140;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .icon { font-size: 3rem; line-height: 1; }
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .tagline {
+    font-size: 0.95rem;
+    color: #8b8fa8;
+    font-style: italic;
+    margin-top: 0.15rem;
+  }
+  blockquote {
+    font-size: 1.05rem;
+    font-style: italic;
+    color: #b0b4cc;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2.4rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #4f6ef7, #7c5bf5);
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(79,110,247,0.3);
+  }
+  .credit {
+    font-size: 0.75rem;
+    color: #4e5170;
+  }
+  .credit a { color: #6b6f88; text-decoration: none; }
+  .credit strong { color: #6b6f88; }
+</style>
