@@ -17,8 +17,9 @@ export function getStaticPaths() {
 
 const { hero } = Astro.params;
 const h = heroData[hero!];
+const base = import.meta.env.BASE_URL;
 const origin = Astro.site?.origin ?? Astro.url.origin;
-const ogImage = `${origin}/cards/${hero}.png`;
+const ogImage = `${origin}${base}/cards/${hero}.png`;
 ---
 
 <html lang="en">
@@ -37,7 +38,7 @@ const ogImage = `${origin}/cards/${hero}.png`;
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${h.icon} I'm ${h.name} — ${h.tagline}`} />
     <meta name="twitter:image" content={ogImage} />
-    <meta http-equiv="refresh" content={`0;url=/?h=${hero}`} />
+    <meta http-equiv="refresh" content={`0;url=${base}/?h=${hero}`} />
   </head>
   <body>
     <p>Redirecting&hellip;</p>
